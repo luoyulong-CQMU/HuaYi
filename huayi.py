@@ -36,7 +36,7 @@ def start_chrome():
 
 class HuaYi(object):
 
-    def __init__(self, num):
+    def __init__(self, num="1"):
         self.is_next_page = True if num == "2" else False
         self.current_video_elem = None
         self.passed_item = ''
@@ -224,33 +224,6 @@ class HuaYi(object):
         time.sleep(1)
         self.check_next()
 
-    def answer_question_backup(self):
-        while True:
-            for k in self.question_dic:
-                answer = self.question_dic[k][0]
-                for j in self.answer_elem_lst:
-
-                    if answer == j.text:
-                        xpath = f"//label[text()='{answer}']"
-                        # self.browser.find_element_by_xpath(xpath).click()
-                        # 调用all的原因很简单，因为可能有多个相同答案;
-                        all_ = self.browser.find_elements_by_xpath(xpath)
-                        for each in all_:
-                            each.click()
-                            print("each", each.text)
-                        break
-
-            self.browser.find_element_by_xpath('//*[@id="btn_submit"]').click()
-            try:
-                a = self.browser.switch_to.alert
-                print(a.text)
-                time.sleep(1)
-                a.accept()
-            except:
-                break
-        time.sleep(1)
-        self.check_next()
-
     def check_next(self):
         statue = self.browser.find_element_by_xpath('/html/body/div[5]/b').text
         print(statue)
@@ -276,6 +249,35 @@ class HuaYi(object):
                 except:
                     pass
 
+    # def answer_question_backup(self):
+    #     while True:
+    #         for k in self.question_dic:
+    #             answer = self.question_dic[k][0]
+    #             for j in self.answer_elem_lst:
+    #
+    #                 if answer == j.text:
+    #                     xpath = f"//label[text()='{answer}']"
+    #                     # self.browser.find_element_by_xpath(xpath).click()
+    #                     # 调用all的原因很简单，因为可能有多个相同答案;
+    #                     all_ = self.browser.find_elements_by_xpath(xpath)
+    #                     for each in all_:
+    #                         each.click()
+    #                         print("each", each.text)
+    #                     break
+    #
+    #         self.browser.find_element_by_xpath('//*[@id="btn_submit"]').click()
+    #         try:
+    #             a = self.browser.switch_to.alert
+    #             print(a.text)
+    #             time.sleep(1)
+    #             a.accept()
+    #         except:
+    #             break
+    #     time.sleep(1)
+    #     self.check_next()
+
+
+
     def test(self):
         self.browser.find_element_by_xpath('//*[@id="btn_submit"]').click()
         a = self.browser.switch_to.alert
@@ -288,16 +290,21 @@ if __name__ == '__main__':
     #
     thread_hi = threading.Thread(target=start_chrome, args=())
     thread_hi.start()
-    print("启动浏览器")
+    print("open Chrome")
     time.sleep(2)
-    print("[1]. 全国I类5分项目")
-    print("[2]. 市I类本地推广")
-    select_num = input("请输入学习选择[1-2]):")
+    print("[1]. globe")
+    print("[2]. local")
+    print("[3]. just Q%A")
+    select_num = input("input study mode [1-3]):")
     current_date = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
+    if select_num == "3":
+        app = HuaYi()
+        app.get_exam_question()
+    else:
     # limit_date = '2021-08-11 12:00:00'
     # if current_date < limit_date:
-    app = HuaYi(select_num)
-    app.select_class()
+        app = HuaYi(select_num)
+        app.select_class()
     # else:
     #     input('任意键继续. . .')
     #     time.sleep(2)
